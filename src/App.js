@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import axios from 'axios';
+import React from 'react';
+import Writer from './components/Writer';
 import './App.css';
 
-function App() {
+const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+const endpoint = "https://api.openai.com/v1/completions";
+
+const client = axios.create({
+  headers: {
+    Authorization: "Bearer " + apiKey,
+  },
+});
+
+const generateText = async (text) => {
+  try {
+    const params = {
+      model: "text-davinci-003",
+      prompt: text,
+      temperature: 0,
+      max_tokens: 10,
+    };
+    
+    const result = await client.post(endpoint, params);
+    const res = result.data.choices[0].text;
+    return res;
+  } catch (err) {
+    console.log(err); 
+    const res = "Can't suggest anything right now :(";
+    return res;
+  }
+};
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Writer />
   );
 }
 
-export default App;
+export {App, generateText};
