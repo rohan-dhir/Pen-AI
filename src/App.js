@@ -4,7 +4,7 @@ import Writer from './components/Writer';
 import './App.css';
 
 const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-const endpoint = "https://api.openai.com/v1/completions";
+const endpoint = process.env.REACT_APP_ENDPOINT;
 
 const client = axios.create({
   headers: {
